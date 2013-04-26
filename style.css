@@ -1,0 +1,31 @@
+html {
+	font-size: 100%;
+}
+body {
+	font-size: 120%;
+	font-family: Arial, Helvetica, sans-serif;
+}
+table {
+	font-size: 120%;
+	border-spacing: 0px;
+	border-style: none;
+	border-color: gray;
+	border-collapse: collapse;
+}
+table th {
+	background-color: #eeeeee;
+	border: 1px solid black;
+	font-weight: bold;
+}
+table td {
+}
+table th, table td {
+	border-width: 2px;
+	padding: 5px;
+	border-style: dotted;
+	border-color: gray;
+}
+table tr:hover {
+	background-color: #eeeeee;
+	border: 1px solid black;
+}
