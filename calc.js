@@ -33,7 +33,8 @@ function calc_update(mb, mp, tar, tba, nozzleMass) {
 		var launch_radius = 0;
 		var launch_volume = 0;
 
-		var burst_volume = (4.0/3.0) * Math.PI * Math.pow(bd / 2.0, 3);
+		//4/3 * pi *(bd/2)^3 (bd = burst diameter)
+		var burst_volume = (4.0/3.0) * Math.PI * Math.pow(bd / 2.0, 3); 
 
 		if(tba_set) {
 			launch_volume = burst_volume * Math.exp((-tba) / adm);
@@ -113,27 +114,32 @@ function calc_update(mb, mp, tar, tba, nozzleMass) {
 		if(bd >= 10 && ascent_rate < 4.8) {
 			set_warning('floater', "configuration suggests a possible floater");
 		}
+		burst_alt_ft = burst_altitude* 3.2808;
 
-		ascent_rate = ascent_rate.toFixed(2);
-		burst_altitude = burst_altitude.toFixed();
-		time_to_burst = time_to_burst.toFixed();
-		neck_lift = nl = neck_lift.toFixed();
-		launch_litres = (launch_volume * 1000).toFixed();
-		launch_cf = (launch_volume * 35.31).toFixed(1);
-		launch_volume = launch_volume.toFixed(2);
+		ascent_rate 		= ascent_rate.toFixed(2);
+		burst_altitude 	= burst_altitude.toFixed();
+		burst_alt_ft 		= burst_alt_ft.toFixed();
+		time_to_burst 	= time_to_burst.toFixed();
+		neck_lift 			= nl = neck_lift.toFixed();
+		launch_litres 	= (launch_volume * 1000).toFixed();
+		launch_cf 			= (launch_volume * 35.31).toFixed(1);
+		launch_volume 	= launch_volume.toFixed(2);
 
-		ascent_rate = ascent_rate + " m/s";
-		burst_altitude = burst_altitude + " m";
-		time_to_burst = time_to_burst + " min";
-		neck_lift = neck_lift + " g";
-		offset = nl-nozzleMass + " g";
-		launch_volume = launch_volume + " m<sup>3</sup>";
-		launch_litres = launch_litres + " L";
-		launch_cf = launch_cf + " ft<sup>3</sup>";
+		ascent_rate 		= ascent_rate + " m/s";
+		burst_altitude 	= burst_altitude + " m";
+		burst_alt_ft		= burst_alt_ft + " ft";
+		time_to_burst 	= time_to_burst + " min";
+		neck_lift 			= neck_lift + " g";
+		offset 					= nl-nozzleMass + " g";
+		launch_volume 	= launch_volume + " m<sup>3</sup>";
+		launch_litres 	= launch_litres + " L";
+		launch_cf 			= launch_cf + " ft<sup>3</sup>";
+
 
 		var ret = {
 			  ascent_rate: 		ascent_rate
 			, burst_altitude: burst_altitude
+			, burst_alt_ft: 	burst_alt_ft
 			, time_to_burst: 	time_to_burst
 			, neck_lift: 			neck_lift
 			, offset: 				offset
@@ -142,188 +148,200 @@ function calc_update(mb, mp, tar, tba, nozzleMass) {
 			, launch_cf: 			launch_cf
 		};
 		return ret;
-	}
+}
+//errors are fatal
+function set_error(id, text) {
+	//alert("ERROR: "+id+": "+text);
+	$("#errors").append("<li>"+"ERROR: "+text+"</li>");
+}
 
-	function set_error(id, text) {
-		alert("ERROR: "+id+": "+text);
-	}
+//warnings are not fatal
+function set_warning(id, text) {
+	$("#errors").append("<li>"+"WARN: "+text+"</li>");	
+}
 
-	function set_warning(id, text) {
-		set_error(id, text);
-	}
+function clear_errors() {
+	$("#errors").html("");
+}
 
+//Find Balloon Diameter
+function find_bd(mb) {
+	var bds = new Array();
 
-	function find_bd(mb) {
-		var bds = new Array();
+	// From Kaymont Totex Sounding Balloon Data
+	bds["k200"] = 3.00;
+	bds["k300"] = 3.78;
+	bds["k350"] = 4.12;
+	bds["k450"] = 4.72;
+	bds["k500"] = 4.99;
+	bds["k600"] = 6.02;
+	bds["k700"] = 6.53;
+	bds["k800"] = 7.00;
+	bds["k1000"] = 7.86;
+	bds["k1200"] = 8.63;
+	bds["k1500"] = 9.44;
+	bds["k2000"] = 10.54;
+	bds["k3000"] = 13.00;
+	// Hwoyee data from http://www.hwoyee.com/base.asp?ScClassid=521&id=521102
+	bds["h200"] = 3.00;
+	bds["h300"] = 3.80;
+	bds["h350"] = 4.10;
+	bds["h400"] = 4.50;
+	bds["h500"] = 5.00;
+	bds["h600"] = 5.80;
+	bds["h750"] = 6.50;
+	bds["h800"] = 6.80;
+	bds["h950"] = 7.20;
+	bds["h1000"] = 7.50;
+	bds["h1200"] = 8.50;
+	bds["h1500"] = 9.50;
+	bds["h1600"] = 10.50;
+	bds["h2000"] = 11.00;
+	// PAWAN data from
+	// https://sites.google.com/site/balloonnewswebstore/1200g-balloon-data
+	bds["p1200"] = 8.0;
 
-		// From Kaymont Totex Sounding Balloon Data
-		bds["k200"] = 3.00;
-		bds["k300"] = 3.78;
-		bds["k350"] = 4.12;
-		bds["k450"] = 4.72;
-		bds["k500"] = 4.99;
-		bds["k600"] = 6.02;
-		bds["k700"] = 6.53;
-		bds["k800"] = 7.00;
-		bds["k1000"] = 7.86;
-		bds["k1200"] = 8.63;
-		bds["k1500"] = 9.44;
-		bds["k2000"] = 10.54;
-		bds["k3000"] = 13.00;
-		// Hwoyee data from http://www.hwoyee.com/base.asp?ScClassid=521&id=521102
-		bds["h200"] = 3.00;
-		bds["h300"] = 3.80;
-		bds["h350"] = 4.10;
-		bds["h400"] = 4.50;
-		bds["h500"] = 5.00;
-		bds["h600"] = 5.80;
-		bds["h750"] = 6.50;
-		bds["h800"] = 6.80;
-		bds["h950"] = 7.20;
-		bds["h1000"] = 7.50;
-		bds["h1200"] = 8.50;
-		bds["h1500"] = 9.50;
-		bds["h1600"] = 10.50;
-		bds["h2000"] = 11.00;
-		// PAWAN data from
-		// https://sites.google.com/site/balloonnewswebstore/1200g-balloon-data
-		bds["p1200"] = 8.0;
+	var bd;
 
-		var bd;
+	//@wtf is the parameter even for then if you are gonna do this
+	//if($('#bd_c:checked').length) bd = get_value('bd');
+	//else bd = bds[$('#mb').val()];
 
-		//@wtf is the parameter even for then if you are gonna do this
-		//if($('#bd_c:checked').length) bd = get_value('bd');
-		//else bd = bds[$('#mb').val()];
+	return bds[mb];
+}
+//@question, What is Cd?
+function find_cd(mb) {
+	var cds = new Array();
 
-		return bds[mb];
-	}
+	// From Kaymont Totex Sounding Balloon Data
+	cds["k200"] = 0.25;
+	cds["k300"] = 0.25;
+	cds["k350"] = 0.25;
+	cds["k450"] = 0.25;
+	cds["k500"] = 0.25;
+	cds["k600"] = 0.30;
+	cds["k700"] = 0.30;
+	cds["k800"] = 0.30;
+	cds["k1000"] = 0.30;
+	cds["k1200"] = 0.25;
+	cds["k1500"] = 0.25;
+	cds["k2000"] = 0.25;
+	cds["k3000"] = 0.25;
+	// Hwoyee data just guesswork
+	cds["h200"] = 0.25;
+	cds["h300"] = 0.25;
+	cds["h350"] = 0.25;
+	cds["h400"] = 0.25;
+	cds["h500"] = 0.25;
+	cds["h600"] = 0.30;
+	cds["h750"] = 0.30;
+	cds["h800"] = 0.30;
+	cds["h950"] = 0.30;
+	cds["h1000"] = 0.30;
+	cds["h1200"] = 0.25;
+	cds["h1500"] = 0.25;
+	cds["h1600"] = 0.25;
+	cds["h2000"] = 0.25;
+	// PAWAN data also guesswork
+	cds["p1200"] = 0.25;
 
-	function find_cd(mb) {
-		var cds = new Array();
+	var cd;
+	//@wtf is the parameter even for then if you are gonna do this
+	// if($('#cd_c:checked').length) cd = get_value('cd');
+	// else cd = cds[$('#mb').val()];
+	return cds[mb];
+}
+function sanity_check_inputs(mb, mp, mp_set, tar, tba, tar_set, tba_set) {
+  if(tar_set && tba_set) {
+      set_error('tar', "Specify either target burst altitude or target ascent rate!");
+      set_error('tba', "Specify either target burst altitude or target ascent rate!");
+      return 1;
+  } else if(!tar_set && !tba_set) {
+      set_error('tar', "Must specify at least one target!");
+      set_error('tba', "Must specify at least one target!");
+      return 1;
+  }
 
-		// From Kaymont Totex Sounding Balloon Data
-		cds["k200"] = 0.25;
-		cds["k300"] = 0.25;
-		cds["k350"] = 0.25;
-		cds["k450"] = 0.25;
-		cds["k500"] = 0.25;
-		cds["k600"] = 0.30;
-		cds["k700"] = 0.30;
-		cds["k800"] = 0.30;
-		cds["k1000"] = 0.30;
-		cds["k1200"] = 0.25;
-		cds["k1500"] = 0.25;
-		cds["k2000"] = 0.25;
-		cds["k3000"] = 0.25;
-		// Hwoyee data just guesswork
-		cds["h200"] = 0.25;
-		cds["h300"] = 0.25;
-		cds["h350"] = 0.25;
-		cds["h400"] = 0.25;
-		cds["h500"] = 0.25;
-		cds["h600"] = 0.30;
-		cds["h750"] = 0.30;
-		cds["h800"] = 0.30;
-		cds["h950"] = 0.30;
-		cds["h1000"] = 0.30;
-		cds["h1200"] = 0.25;
-		cds["h1500"] = 0.25;
-		cds["h1600"] = 0.25;
-		cds["h2000"] = 0.25;
-		// PAWAN data also guesswork
-		cds["p1200"] = 0.25;
+  if(tar_set && tar < 0) {
+      set_error('tar', "Target ascent rate can't be negative!");
+      return 1;
+  } else if(tar_set && tar > 10) {
+      set_error('tar', "Target ascent rate is too large! (more than 10m/s)");
+      return 1;
+  }
 
-		var cd;
-		//@wtf is the parameter even for then if you are gonna do this
-		// if($('#cd_c:checked').length) cd = get_value('cd');
-		// else cd = cds[$('#mb').val()];
-		return cds[mb];
-	}
-	function sanity_check_inputs(mb, mp, mp_set, tar, tba, tar_set, tba_set) {
-    if(tar_set && tba_set) {
-        set_error('tar', "Specify either target burst altitude or target ascent rate!");
-        set_error('tba', "Specify either target burst altitude or target ascent rate!");
-        return 1;
-    } else if(!tar_set && !tba_set) {
-        set_error('tar', "Must specify at least one target!");
-        set_error('tba', "Must specify at least one target!");
-        return 1;
-    }
+  if(tba_set && tba < 10000) {
+      set_error('tba', "Target burst altitude is too low! (less than 10km)");
+      return 1;
+  } else if(tba_set && tba > 40000) {
+      set_error('tba',
+          "Target burst altitude is too high! (greater than 40km)");
+      return 1;
+  }
 
-    if(tar_set && tar < 0) {
-        set_error('tar', "Target ascent rate can't be negative!");
-        return 1;
-    } else if(tar_set && tar > 10) {
-        set_error('tar', "Target ascent rate is too large! (more than 10m/s)");
-        return 1;
-    }
+  if(!mp_set) {
+      set_error('mp', "You have to enter a payload mass!");
+      return 1;
+  } else if(mp < 20) {
+      set_error('mp', "Mass is too small! (less than 20g)");
+      return 1;
+  } else if(mp > 5000) {
+      set_error('mp', "Mass is too large! (over 5kg)");
+      return 1;
+  }
 
-    if(tba_set && tba < 10000) {
-        set_error('tba', "Target burst altitude is too low! (less than 10km)");
-        return 1;
-    } else if(tba_set && tba > 40000) {
-        set_error('tba',
-            "Target burst altitude is too high! (greater than 40km)");
-        return 1;
-    }
+  return 0;
+}
 
-    if(!mp_set) {
-        set_error('mp', "You have to enter a payload mass!");
-        return 1;
-    } else if(mp < 20) {
-        set_error('mp', "Mass is too small! (less than 20g)");
-        return 1;
-    } else if(mp > 5000) {
-        set_error('mp', "Mass is too large! (over 5kg)");
-        return 1;
-    }
+function sanity_check_constants(rho_g, rho_a, adm, ga, bd, cd) {
+  if(!rho_a || rho_a < 0) {
+      //show_error('rho_a');
+      return 1;
+  }
+  if(!rho_g || rho_g < 0 || rho_g > rho_a) {
+      //show_error('rho_g');
+      return 1;
+  }
+  if(!adm || adm < 0) {
+      //show_error('adm');
+      return 1;
+  }
+  if(!ga || ga < 0) {
+      //show_error('ga');
+      return 1;
+  }
+  if(!cd || cd < 0 || cd > 1) {
+      //show_error('cd');
+      return 1;
+  }
+  if(!bd || bd < 0) {
+      //show_error('bd');
+      return 1;
+  }
 
-    return 0;
-	}
-
-	function sanity_check_constants(rho_g, rho_a, adm, ga, bd, cd) {
-    if(!rho_a || rho_a < 0) {
-        //show_error('rho_a');
-        return 1;
-    }
-    if(!rho_g || rho_g < 0 || rho_g > rho_a) {
-        //show_error('rho_g');
-        return 1;
-    }
-    if(!adm || adm < 0) {
-        //show_error('adm');
-        return 1;
-    }
-    if(!ga || ga < 0) {
-        //show_error('ga');
-        return 1;
-    }
-    if(!cd || cd < 0 || cd > 1) {
-        //show_error('cd');
-        return 1;
-    }
-    if(!bd || bd < 0) {
-        //show_error('bd');
-        return 1;
-    }
-
-    return 0;
-	}
+  return 0;
+}
 
 function gen_table(targets, balloon, payloadWeight, nozzleMass) {
 	var table = "";
-	var headers = new Array("Ascent Rate",
-		"Burst Altitude",
-		"Time To Burst",
-		"Neck Lift",
-		"Offset",
-		"Launch Volume m<sup>3</sup>",
-		"Launch Litres",
-		"Launch Ft<sup>3</sup>");
+
+	var headers = {
+		"Ascent Rate"			:{},
+		"Burst Altitude"	:{colspan:2, title:"Altitude when the balloon will burst."},
+		"Time To Burst"		:{},
+		"Neck Lift"				:{title:"The amont of lift needed at the neck of the balloon."},
+		"Offset"					:{title:"Lift at the neck less the Nozzle mass. We use this to calculate th weight of the water jug."},
+		"Launch Volume"		:{colspan:3,title:"Amount of gas needed at ground level."},
+	}
 	table += "<table border=1>";
 	table += "<tr>";
 	for(var h in headers){
-    table += "<th>" + headers[h] + "</th>";
+		table += "<th ";
+		for(var a in headers[h]) {
+			table += a+"=\""+headers[h][a]+"\" ";
+		}
+    table += ">";
+    table += h + "</th>";
 	}
 	table += "</tr>";
 

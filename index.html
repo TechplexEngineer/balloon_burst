@@ -31,9 +31,14 @@
 		// var payloadWeight = $("[name=\"mp\"]").val();
 		
 		function update(){
-
+			clear_errors();
 			balloon = $("[name=\"mb\"]").val();
 			payloadWeight = $("[name=\"mp\"]").val();
+			try { //allow for expressions
+				eval("payloadWeight="+payloadWeight); //it turns out 255+ is a syntax error
+			} catch(err) {
+				payloadWeight = parseFloat(payloadWeight); //fallback to parse as int
+			}
 			//get target altitudes and create array
 			v=$("[name=\"tar\"]").val();
 			console.log("V: ", v);
@@ -42,6 +47,11 @@
 			targets = v.replace(" ","").split(',');
 
 			nozzleMass = $("[name=\"nm\"]").val();
+			try { //allow for expressions
+				eval("nozzleMass="+nozzleMass); //it turns out 255+ is a syntax error
+			} catch(err) {
+				nozzleMass = parseFloat(nozzleMass); //fallback to parse as int
+			}
 
 			//regen the table
 			$("#output").html(gen_table(targets, balloon, payloadWeight, nozzleMass));
@@ -50,7 +60,7 @@
 		update();
 
 
-
+		//4.72,5.48,6.175,6.84
 		//PARAMETERS:
 		// var targets = new Array(//5,6,7,8,9
 		// 4.73,		//5
@@ -122,6 +132,10 @@
 	<fieldset>
 		<legend>Output</legend>
 		<div id="output"></div>
+	</fieldset>
+	<fieldset>
+		<legend>Errors</legend>
+		<ul id="errors"></ul>
 	</fieldset>
 
 </body>
