@@ -7,6 +7,9 @@ html {
 body {
 	font-family: Arial, Helvetica, sans-serif;
 }
+
+
+/*Table Section*/
 table {
 	border-spacing: 0px;
 	border-style: none;
@@ -29,4 +32,21 @@ table th, table td {
 table tr:hover {
 	background-color: #eeeeee;
 	border: 1px solid black;
+}
+
+/*Fieldset Section*/
+fieldset input, fieldset select {
+	display:block;
+	border: 1px solid hsl(0, 0%, 80%);
+	padding: 6px 4px;
+	outline: none;
+	border-radius: 4px;
+}
+label {
+	margin-top: .25em;
+	float: left;
+	width: 12em;
+	margin-right: .5em;
+	clear: left;
+	text-align: right;
 }
