@@ -1,4 +1,4 @@
-function calc_update(mb, mp, tar, tba) {
+function calc_update(mb, mp, tar, tba, nozzleMass) {
 		var mp_set = 1;
 		// if (typeof mb !== "undefined" && mb !== null)
 		// 	mp_set = 1;
@@ -117,7 +117,7 @@ function calc_update(mb, mp, tar, tba) {
 		ascent_rate = ascent_rate.toFixed(2);
 		burst_altitude = burst_altitude.toFixed();
 		time_to_burst = time_to_burst.toFixed();
-		neck_lift = neck_lift.toFixed();
+		neck_lift = nl = neck_lift.toFixed();
 		launch_litres = (launch_volume * 1000).toFixed();
 		launch_cf = (launch_volume * 35.31).toFixed(1);
 		launch_volume = launch_volume.toFixed(2);
@@ -126,6 +126,7 @@ function calc_update(mb, mp, tar, tba) {
 		burst_altitude = burst_altitude + " m";
 		time_to_burst = time_to_burst + " min";
 		neck_lift = neck_lift + " g";
+		offset = nl-nozzleMass + " g";
 		launch_volume = launch_volume + " m<sup>3</sup>";
 		launch_litres = launch_litres + " L";
 		launch_cf = launch_cf + " ft<sup>3</sup>";
@@ -135,6 +136,7 @@ function calc_update(mb, mp, tar, tba) {
 			, burst_altitude: burst_altitude
 			, time_to_burst: 	time_to_burst
 			, neck_lift: 			neck_lift
+			, offset: 				offset
 			, launch_volume: 	launch_volume
 			, launch_litres: 	launch_litres
 			, launch_cf: 			launch_cf
@@ -277,10 +279,9 @@ function calc_update(mb, mp, tar, tba) {
     }
 
     return 0;
+	}
 
-}
-
-function sanity_check_constants(rho_g, rho_a, adm, ga, bd, cd) {
+	function sanity_check_constants(rho_g, rho_a, adm, ga, bd, cd) {
     if(!rho_a || rho_a < 0) {
         //show_error('rho_a');
         return 1;
@@ -307,14 +308,15 @@ function sanity_check_constants(rho_g, rho_a, adm, ga, bd, cd) {
     }
 
     return 0;
-}
+	}
 
-function gen_table(targets, balloon, payloadWeight ) {
+function gen_table(targets, balloon, payloadWeight, nozzleMass) {
 	var table = "";
 	var headers = new Array("Ascent Rate",
 		"Burst Altitude",
 		"Time To Burst",
 		"Neck Lift",
+		"Offset",
 		"Launch Volume m<sup>3</sup>",
 		"Launch Litres",
 		"Launch Ft<sup>3</sup>");
@@ -326,7 +328,7 @@ function gen_table(targets, balloon, payloadWeight ) {
 	table += "</tr>";
 
 	for(var tar in targets){
-    var ret = calc_update(balloon, payloadWeight, targets[tar], 0);
+    var ret = calc_update(balloon, payloadWeight, targets[tar], 0, nozzleMass);
 		table += "<tr>";
 		for(var prop in ret){
 	    table += "<td>" + ret[prop] + "</td>";
