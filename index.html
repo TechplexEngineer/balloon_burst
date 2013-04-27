@@ -5,7 +5,7 @@
 	<script type="text/javascript" src="calc.js"></script>	
 	<script type="text/javascript" src="cordova.js"></script>	
 	<link rel="stylesheet" type="text/css" href="style.css">
-
+	
 	<script>
 	//int main
 	$(document).ready(function(){
@@ -64,7 +64,8 @@
 
 </head>
 <body>
-	<h1> Balloon Burst Calculator </h1>
+	
+	<h1> <img width="64" src="icon.png"/> Balloon Burst Calculator </h1>
 
 	<fieldset>
 		<legend>Input</legend>
@@ -74,41 +75,41 @@
 
 		<label for="mb">Balloon Type:</label>
 		<select name="mb" title="What type of balloon are you using?">
-	    <option value="k200">Kaymont - 200</option>
-	    <option value="k300">Kaymont - 300</option>
-	    <option value="k350">Kaymont - 350</option>
-	    <option value="k450">Kaymont - 450</option>
-	    <option value="k500">Kaymont - 500</option>
-	    <option value="k600">Kaymont - 600</option>
-	    <option value="k700">Kaymont - 700</option>
-	    <option value="k800">Kaymont - 800</option>
-	    <option value="k1000">Kaymont - 1000</option>
-	    <option value="k1200">Kaymont - 1200</option>
-	    <option value="k1500" selected="selected">Kaymont - 1500</option>
-	    <option value="k2000">Kaymont - 2000</option>
-	    <option value="k3000">Kaymont - 3000</option>
-	    <option value="h200">Hwoyee - 200</option>
-	    <option value="h300">Hwoyee - 300</option>
-	    <option value="h350">Hwoyee - 350</option>
-	    <option value="h450">Hwoyee - 400</option>
-	    <option value="h500">Hwoyee - 500</option>
-	    <option value="h600">Hwoyee - 600</option>
-	    <option value="h700">Hwoyee - 750</option>
-	    <option value="h800">Hwoyee - 800</option>
-	    <option value="h800">Hwoyee - 950</option>
-	    <option value="h1000">Hwoyee - 1000</option>
-	    <option value="h1200">Hwoyee - 1200</option>
-	    <option value="h1500">Hwoyee - 1500</option>
-	    <option value="h1600">Hwoyee - 1600</option>
-	    <option value="h2000">Hwoyee - 2000</option>
-	    <option value="p1200">PAWAN - 1200</option>
+		    <option value="k200">Kaymont - 200</option>
+		    <option value="k300">Kaymont - 300</option>
+		    <option value="k350">Kaymont - 350</option>
+		    <option value="k450">Kaymont - 450</option>
+		    <option value="k500">Kaymont - 500</option>
+		    <option value="k600">Kaymont - 600</option>
+		    <option value="k700">Kaymont - 700</option>
+		    <option value="k800">Kaymont - 800</option>
+		    <option value="k1000">Kaymont - 1000</option>
+		    <option value="k1200">Kaymont - 1200</option>
+		    <option value="k1500" selected="selected">Kaymont - 1500</option>
+		    <option value="k2000">Kaymont - 2000</option>
+		    <option value="k3000">Kaymont - 3000</option>
+		    <option value="h200">Hwoyee - 200</option>
+		    <option value="h300">Hwoyee - 300</option>
+		    <option value="h350">Hwoyee - 350</option>
+		    <option value="h450">Hwoyee - 400</option>
+		    <option value="h500">Hwoyee - 500</option>
+		    <option value="h600">Hwoyee - 600</option>
+		    <option value="h700">Hwoyee - 750</option>
+		    <option value="h800">Hwoyee - 800</option>
+		    <option value="h800">Hwoyee - 950</option>
+		    <option value="h1000">Hwoyee - 1000</option>
+		    <option value="h1200">Hwoyee - 1200</option>
+		    <option value="h1500">Hwoyee - 1500</option>
+		    <option value="h1600">Hwoyee - 1600</option>
+		    <option value="h2000">Hwoyee - 2000</option>
+		    <option value="p1200">PAWAN - 1200</option>
 		</select>
 
 		<label for="tar">Target Ascent rate(s) (m/s):</label>
-		<input type="text" name="tar" value="5,6,7,8" title="Enter a list of comma-separated values to use."/>
+		<input type="tel" name="tar" value="5,6,7,8" title="Enter a list of comma-separated values to use."/>
 
 		<label for="nm">Nozzle Mass (grams):</label>
-		<input type="text" name="nm" value="250" title="This value is subtracted from the neck lift to give the weight needed in an offset weight. Expressions are accepted."/>
+		<input type="number" name="nm" value="250" title="This value is subtracted from the neck lift to give the weight needed in an offset weight. Expressions are accepted."/>
 	</fieldset>
 	
 
